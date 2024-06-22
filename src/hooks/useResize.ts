@@ -30,9 +30,7 @@ export default function useResize() {
       entries(views).forEach(([layoutName, el]) => {
         el.style.width = `${viewSize}px`;
         if (viewResizers[layoutName]) {
-          viewResizers[layoutName].style.left = `${
-            viewSize * enabledLayout - 8
-          }px`; // 8 is half of resizer width
+          viewResizers[layoutName].style.left = `${viewSize * enabledLayout}px`; // 8 is half of resizer width
         }
         if (layout[layoutName]) enabledLayout += 1;
       });

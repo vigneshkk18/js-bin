@@ -21,7 +21,7 @@ export default function WithView({
       key={`view-wrapper-${layoutName}`}
       id={`view-${layoutName}`}
       style={{ display: layout[layoutName] ? undefined : "none" }}
-      className="h-full view px-4 py-2"
+      className="h-full view"
     >
       {children}
     </div>,
@@ -31,7 +31,7 @@ export default function WithView({
         key={`view-resizer-${layoutName}`}
         id={`view-resizer-${layoutName}`}
         style={{ display: layout[layoutName] ? undefined : "none" }}
-        className="view resize absolute top-0 h-full border-r border-r-resizer hover:border-r-resizerActive hover:border-dashed px-2 cursor-all-scroll"
+        className="view resize absolute top-0 h-full border-r border-r-resizer hover:border-r-resizerActive hover:border-dashed cursor-all-scroll z-[1]"
       ></div>
     ),
   ];

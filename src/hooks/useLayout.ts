@@ -27,11 +27,12 @@ export default function useLayout() {
 
   useEffect(() => {
     // enable selected layouts from search string.
-    const enabledArr = split<Layout>(search, ",");
-    if (!enabledArr.length) return;
+    const enabledArr = split<Layout>(search, ",").filter(
+      (s) => s.trim().length
+    );
 
     // only show one layout for mobile screens
-    let enabledLayout = { [enabledArr[0]]: true };
+    let enabledLayout = enabledArr.length ? { [enabledArr[0]]: true } : {};
     if (screen !== "sm") {
       enabledLayout = split<Layout>(search, ",").reduce((acc, str) => {
         const supported = allowedLayouts.has(str);

@@ -9,6 +9,7 @@ export default {
         inactiveLight: "#f7f7f7",
         buttonHover: "rgba(0,0,0,0.04)",
         buttonActive: "hsl(215, 100%, 96%)",
+        panel: "rgb(247,247,247)",
       },
       colors: {
         primary: "#232323",
