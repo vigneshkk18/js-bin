@@ -1,4 +1,5 @@
-export const entries = <T extends Record<string, unknown>>(obj: T) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const entries = <T extends Record<any, unknown>>(obj: T) => {
   return Object.entries(obj) as Array<[keyof T, T[keyof T]]>;
 };
 

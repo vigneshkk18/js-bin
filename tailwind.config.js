@@ -20,6 +20,8 @@ export default {
       borderColor: {
         light: "#bfbfbf",
         button: "#ccc",
+        resizer: "rgba(218, 218, 218, 0.5)",
+        resizerActive: "#39f",
       },
     },
   },

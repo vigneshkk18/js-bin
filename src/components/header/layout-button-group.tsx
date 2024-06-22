@@ -1,5 +1,6 @@
 import Button from "ui/button";
 
+import useScreenName from "hooks/useScreenName";
 import useLayout, { type Layout } from "hooks/useLayout";
 
 import { entries } from "utils/common";
@@ -13,13 +14,14 @@ const ButtonsConfig: Record<Layout, string> = {
 };
 
 export default function LayoutButtonGroup() {
-  const { layout, toggleLayout } = useLayout();
+  const screen = useScreenName();
+  const { layout, toggleLayout, selectLayout } = useLayout();
 
   return (
     <div className="flex sm:py-1">
       {entries(ButtonsConfig).map(([key, label]) => (
         <Button
-          onClick={toggleLayout(key)}
+          onClick={screen === "sm" ? selectLayout(key) : toggleLayout(key)}
           className={`md:first:rounded-s-[3px] last:rounded-e-[3px] even:border-x-0 border-y-0 sm:border-y px-2 ${
             layout[key] ? "bg-buttonActive" : "hover:bg-buttonHover"
           }`}
