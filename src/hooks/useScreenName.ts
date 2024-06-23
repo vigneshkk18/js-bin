@@ -18,7 +18,6 @@ export default function useScreenName() {
         if (window.innerWidth <= parseInt(screenEntries[i][1]))
           screenName = screenEntries[i][0];
       }
-      console.log(screenName, screens, window.innerWidth);
       setScreenName(screenName);
     };
 

@@ -44,6 +44,12 @@
       "views/*": [
         "src/views/*"
       ],
+      "db/*": [
+        "src/db/*"
+      ],
+      "types/*": [
+        "src/types/*"
+      ],
     }
   },
   "include": [

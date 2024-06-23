@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { css } from "@codemirror/lang-css";
 // import { sass } from "@codemirror/lang-sass";
@@ -7,8 +5,16 @@ import { css } from "@codemirror/lang-css";
 
 import WithView from "components/bin/with-view";
 
+import useCachedCode from "hooks/useCachedCode";
+import useCodeSync from "hooks/useCodeSync";
+
 function View() {
-  const [value, setValue] = useState("");
+  const initialCode = useCachedCode("css");
+  const { sync } = useCodeSync("css");
+
+  function onChange(code: string) {
+    sync(code);
+  }
 
   function onFocus(event: React.FocusEvent) {
     const el = event.target as HTMLDivElement;
@@ -24,7 +30,7 @@ function View() {
 
   return (
     <ReactCodeMirror
-      value={value}
+      value={initialCode}
       theme={"none"}
       height="100%"
       style={{ height: "100%" }}
@@ -32,7 +38,7 @@ function View() {
       onBlur={onBlur}
       className="focus-visible:outline-none outline-none bg-panel cursor-default"
       extensions={[css()]}
-      onChange={setValue}
+      onChange={onChange}
     />
   );
 }

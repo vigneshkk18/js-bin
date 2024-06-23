@@ -12,7 +12,15 @@ export default defineConfig({
       ui: "/src/ui",
       views: "/src/views",
       utils: "/src/utils",
+      db: "/src/db",
+      types: "/src/types",
       src: "/src",
+    },
+  },
+  server: {
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
     },
   },
 });

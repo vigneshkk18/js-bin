@@ -1,13 +1,18 @@
-import { Route, Router } from "wouter";
+import { Route, Router, Switch } from "wouter";
 
 import Bin from "views/bin";
+import DefaultRoute from "views/default-route";
+
 import Header from "components/header/header";
 
 function App() {
   return (
     <Router>
       <Header />
-      <Route component={Bin}></Route>
+      <Switch>
+        <Route path="/:binId" component={Bin}></Route>
+        <Route component={DefaultRoute}></Route>
+      </Switch>
     </Router>
   );
 }

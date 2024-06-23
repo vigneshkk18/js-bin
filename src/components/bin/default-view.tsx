@@ -7,11 +7,5 @@ export default function DefaultView() {
 
   if (layoutSelected) return null;
 
-  return (
-    <img
-      className="aspect-video"
-      src="https://static.jsbin.com/images/dave.min.svg"
-      alt="JSBin"
-    />
-  );
+  return <img className="aspect-video" src="/logo.svg" alt="JSBin" />;
 }

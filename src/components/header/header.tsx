@@ -6,11 +6,7 @@ export default function Header() {
     <header className="w-full flex items-stretch justify-between bg-headerLight border-b border-b-light">
       <div className="flex gap-1 h-full">
         <div className="p-2">
-          <img
-            src="https://static.jsbin.com/images/dave.min.svg"
-            alt="Logo"
-            className="w-6 h-6"
-          />
+          <img src="/logo.svg" alt="Logo" className="w-6 h-6" />
         </div>
         <File />
       </div>
