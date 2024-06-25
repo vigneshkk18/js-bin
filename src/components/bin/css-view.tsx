@@ -7,6 +7,7 @@ import WithView from "components/bin/with-view";
 
 import useCachedCode from "hooks/useCachedCode";
 import useCodeSync from "hooks/useCodeSync";
+import CSSHeader from "./css-header";
 
 function View() {
   const initialCode = useCachedCode("css");
@@ -29,17 +30,20 @@ function View() {
   }
 
   return (
-    <ReactCodeMirror
-      value={initialCode}
-      theme={"none"}
-      height="100%"
-      style={{ height: "100%" }}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      className="focus-visible:outline-none outline-none bg-panel cursor-default"
-      extensions={[css()]}
-      onChange={onChange}
-    />
+    <>
+      <CSSHeader />
+      <ReactCodeMirror
+        value={initialCode}
+        theme={"none"}
+        height="100%"
+        style={{ height: "100%" }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        className="focus-visible:outline-none outline-none bg-panel cursor-default"
+        extensions={[css()]}
+        onChange={onChange}
+      />
+    </>
   );
 }
 

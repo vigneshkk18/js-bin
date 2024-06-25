@@ -79,10 +79,10 @@ export const killContainer = () => {
   codeStoreHook.setState(defaultContainer);
 };
 
-export const addDep = async (name: string) => {
+export const addDep = async (deps: string[]) => {
   const { instance } = codeStoreHook.getState();
   if (!instance) return;
-  const p1 = await instance.spawn("npm", ["i", name]);
+  const p1 = await instance.spawn("npm", ["i", ...deps]);
   p1.output.pipeTo(
     new WritableStream({
       write(data) {

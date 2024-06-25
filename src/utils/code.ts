@@ -1,6 +1,8 @@
 import { Layout } from "hooks/useLayout";
 
-type Language = Extract<Layout, "html" | "css" | "js">;
+export type Language = Extract<Layout, "html" | "css" | "js">;
+export type CSSPreProcessor = "none" | "scss" | "sass" | "less" | "stylus";
+export type JSPreProcessor = "none" | "typescript" | "react";
 
 export const htmlPreProcessorExtension: Record<string, string> = {
   none: ".html",
@@ -16,11 +18,10 @@ export const cssPreProcessorExtension: Record<string, string> = {
 };
 
 export const cssPreProcessorPkg: Record<string, string[]> = {
-  none: [""],
+  none: [],
   scss: ["sass"],
   sass: ["sass"],
   less: ["less"],
-  styl: ["stylus"],
   stylus: ["stylus"],
 };
 
@@ -40,6 +41,20 @@ export const languageToFilePrefix: Record<Language, string> = {
   html: "index",
   css: "style",
   js: "script",
+};
+
+export const cssPreProcessorLabel: Record<CSSPreProcessor, string> = {
+  none: "None (Css)",
+  scss: "Scss",
+  sass: "Sass",
+  stylus: "Stylus",
+  less: "Less",
+};
+
+export const jsPreProcessorLabel: Record<JSPreProcessor, string> = {
+  none: "None",
+  react: "React",
+  typescript: "Typescript",
 };
 
 export const languageToExtensionMap: Record<

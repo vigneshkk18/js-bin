@@ -7,14 +7,13 @@ import HTMLView from "components/bin/html-view";
 import OutputView from "components/bin/output-view";
 import ConsoleView from "components/bin/console-view";
 
-import useCodeStore, { bootContainer, killContainer } from "hooks/useCodeStore";
+import { bootContainer, killContainer } from "hooks/useCodeStore";
 import useLayout from "hooks/useLayout";
 import useResize from "hooks/useResize";
 import { fetchBin } from "hooks/useBin";
 
 export default function Views() {
   useResize();
-  useCodeStore();
   const { binId } = useParams<{ binId: string }>();
   const { layout } = useLayout();
   const layoutSelected = Object.values(layout).some((selected) => selected);
