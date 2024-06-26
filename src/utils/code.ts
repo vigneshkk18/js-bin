@@ -31,7 +31,7 @@ export const jsPreProcessorExtension: Record<string, string> = {
   react: ".tsx",
 };
 
-export const scriptPreProcessorPkg: Record<string, string[]> = {
+export const jsPreProcessorPkg: Record<string, string[]> = {
   none: [""],
   typescript: [""],
   react: ["react", "react-dom", "@vitejs/plugin-react"],
@@ -64,4 +64,16 @@ export const languageToExtensionMap: Record<
   html: htmlPreProcessorExtension,
   css: cssPreProcessorExtension,
   js: jsPreProcessorExtension,
+};
+
+export const extranctHTMLCode = (html: string) => {
+  const startIdx = html.indexOf("<body>") + 6;
+  const endIdx = html.lastIndexOf("</body>");
+  return html.substring(startIdx, endIdx);
+};
+
+export const extranctHeadCode = (html: string) => {
+  const startIdx = html.indexOf("<head>") + 6;
+  const endIdx = html.lastIndexOf("</head>");
+  return html.substring(startIdx, endIdx);
 };

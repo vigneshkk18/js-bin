@@ -9,18 +9,19 @@ import { hideLoading, showLoading } from "hooks/useLoading";
 import { addDep, renameFile, writeFile } from "hooks/useCodeStore";
 
 import {
-  CSSPreProcessor,
-  cssPreProcessorExtension,
-  cssPreProcessorLabel,
-  cssPreProcessorPkg,
+  JSPreProcessor,
+  jsPreProcessorExtension,
+  jsPreProcessorPkg,
+  jsPreProcessorLabel,
   languageToFilePrefix,
 } from "utils/code";
-import { entries } from "utils/common";
 import htmlFile from "utils/fst/html";
+import { entries } from "utils/common";
+import viteConfigFile from "utils/fst/viteConfig";
 
 import CaretDown from "assets/caret-down";
 
-export default function CSSHeader() {
+export default function JSHeader() {
   const bin = useBin();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,9 +36,9 @@ export default function CSSHeader() {
       >
         <span>
           {
-            cssPreProcessorLabel[
-              (bin?.extensionEnabled?.css?.preprocessor ||
-                "none") as CSSPreProcessor
+            jsPreProcessorLabel[
+              (bin?.extensionEnabled?.js?.preprocessor ||
+                "none") as JSPreProcessor
             ]
           }
         </span>
@@ -75,38 +76,45 @@ interface Menu {
 function Menu({ isOpen, closeMenu }: Menu) {
   const { binId } = useParams<{ binId: string }>();
   const bin = useBin();
-  const selectPreprocessor = (preprocessor: CSSPreProcessor) => async () => {
+  const selectPreprocessor = (preprocessor: JSPreProcessor) => async () => {
     if (!bin) return;
     showLoading();
     try {
-      if (cssPreProcessorPkg[preprocessor].length) {
-        await addDep(cssPreProcessorPkg[preprocessor]);
+      if (jsPreProcessorPkg[preprocessor].length) {
+        await addDep(jsPreProcessorPkg[preprocessor]);
       }
 
-      const oldPreprocessor = bin.extensionEnabled.css?.preprocessor || "none";
-      const oldPath = `${languageToFilePrefix.css}${cssPreProcessorExtension[oldPreprocessor]}`;
-      const newPath = `${languageToFilePrefix.css}${cssPreProcessorExtension[preprocessor]}`;
+      if (preprocessor === "react") {
+        const vite = (
+          viteConfigFile({
+            ...bin.extensionEnabled,
+            js: { preprocessor },
+          }) as FileNode
+        )?.file?.contents as string;
+        await writeFile("vite.config.js", vite);
+      }
+
+      const oldPreprocessor = bin.extensionEnabled.js?.preprocessor || "none";
+      const oldPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[oldPreprocessor]}`;
+      const newPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[preprocessor]}`;
       await renameFile(oldPath, newPath);
       const html = (
         htmlFile(bin.html, {
           ...bin.extensionEnabled,
-          css: { preprocessor },
+          js: { preprocessor },
         }) as FileNode
       )?.file?.contents as string;
       await writeFile("index.html", html);
       closeMenu();
 
       const updatedBin = { ...bin };
-      updatedBin.extensionEnabled.css = {
-        ...updatedBin.extensionEnabled.css,
-        preprocessor,
-      };
       updatedBin.extensionEnabled.js = {
         ...updatedBin.extensionEnabled.js,
+        preprocessor,
         packages: Array.from(
           new Set([
-            ...(updatedBin.extensionEnabled.js?.packages || []),
-            ...cssPreProcessorPkg[preprocessor],
+            ...(bin.extensionEnabled.js?.packages || []),
+            ...jsPreProcessorPkg[preprocessor],
           ])
         ),
       };
@@ -131,12 +139,12 @@ function Menu({ isOpen, closeMenu }: Menu) {
         className="absolute top-[41px] border border-light shadow-xl bg-white w-[250px] z-50"
       >
         <ul>
-          {entries(cssPreProcessorLabel).map(([key, label]) => (
+          {entries(jsPreProcessorLabel).map(([key, label]) => (
             <MenuOption
               key={key}
               label={label}
               active={
-                (bin?.extensionEnabled?.css?.preprocessor || "none") === key
+                (bin?.extensionEnabled?.js?.preprocessor || "none") === key
               }
               onClick={selectPreprocessor(key)}
             />

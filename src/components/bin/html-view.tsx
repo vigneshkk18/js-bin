@@ -1,17 +1,18 @@
-import ReactCodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
+import ReactCodeMirror from "@uiw/react-codemirror";
 
 import WithView from "components/bin/with-view";
+import HTMLHeader from "components/bin/html-header";
 
-import useCachedCode from "hooks/useCachedCode";
 import useCodeSync from "hooks/useCodeSync";
-import HTMLHeader from "./html-header";
+import useBin, { updateCode } from "hooks/useBin";
 
 function View() {
-  const initialCode = useCachedCode("html");
+  const bin = useBin();
   const { sync } = useCodeSync("html");
 
   function onChange(code: string) {
+    updateCode("html", code);
     sync(code);
   }
 
@@ -31,7 +32,7 @@ function View() {
     <>
       <HTMLHeader />
       <ReactCodeMirror
-        value={initialCode}
+        value={bin?.html || ""}
         theme={"none"}
         height="100%"
         style={{ height: "100%" }}

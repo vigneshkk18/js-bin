@@ -1,19 +1,20 @@
-import ReactCodeMirror from "@uiw/react-codemirror";
 import { css } from "@codemirror/lang-css";
+import ReactCodeMirror from "@uiw/react-codemirror";
 // import { sass } from "@codemirror/lang-sass";
 // import { less } from "@codemirror/lang-less";
 
 import WithView from "components/bin/with-view";
+import CSSHeader from "components/bin/css-header";
 
-import useCachedCode from "hooks/useCachedCode";
 import useCodeSync from "hooks/useCodeSync";
-import CSSHeader from "./css-header";
+import useBin, { updateCode } from "hooks/useBin";
 
 function View() {
-  const initialCode = useCachedCode("css");
+  const bin = useBin();
   const { sync } = useCodeSync("css");
 
   function onChange(code: string) {
+    updateCode("css", code);
     sync(code);
   }
 
@@ -33,7 +34,7 @@ function View() {
     <>
       <CSSHeader />
       <ReactCodeMirror
-        value={initialCode}
+        value={bin?.css || ""}
         theme={"none"}
         height="100%"
         style={{ height: "100%" }}

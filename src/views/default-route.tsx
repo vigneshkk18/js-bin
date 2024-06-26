@@ -9,7 +9,6 @@ import DefaultView from "components/bin/default-view";
 
 import jsFile from "utils/fst/js";
 import cssFile from "utils/fst/css";
-import htmlFile from "utils/fst/html";
 import { defaultJS } from "utils/default-codes/js";
 import { defaultCSS } from "utils/default-codes/css";
 import { defaultHTML } from "utils/default-codes/html";
@@ -23,13 +22,13 @@ export default function DefaultRoute() {
     const newBin: Bin = {
       id: shortUUID.generate(),
       title: "Untitled",
-      html: (htmlFile(defaultHTML) as FileNode)?.file?.contents as string,
+      html: defaultHTML,
       css: (cssFile(defaultCSS) as FileNode)?.file?.contents as string,
       js: (jsFile(defaultJS) as FileNode)?.file?.contents as string,
       extensionEnabled: {
         html: {},
         css: {},
-        js: { packages: ["vite"] },
+        js: { packages: ["vite", "typescript"] },
       },
     };
 

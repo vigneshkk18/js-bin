@@ -19,28 +19,14 @@ export const fetchBin = async (binId: string) => {
   }
 };
 
-export const updatePreProcessor = async (
-  binId: string,
-  language: Language,
-  preprocessor: string
-) => {
+export const updateCode = async (language: Language, code: string) => {
+  binHook.setState({ ...binHook.getState(), [language]: code });
+};
+
+export const updateBin = async (binId: string, updatedBin: Bin) => {
   try {
-    await db.bins.update(binId, {
-      [`extensionEnbled.${language}`]: {
-        preprocessor,
-      },
-    });
-    const bin = binHook.getState();
-    binHook.setState({
-      ...bin,
-      extensionEnabled: {
-        ...bin?.extensionEnabled,
-        [language]: {
-          ...bin?.extensionEnabled[language],
-          preprocessor,
-        },
-      },
-    });
+    await db.bins.update(binId, updatedBin);
+    binHook.setState(updatedBin);
   } catch (error) {
     console.error(error);
   }

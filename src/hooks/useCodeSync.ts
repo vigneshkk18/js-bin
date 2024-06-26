@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useParams } from "wouter";
+import { FileNode } from "@webcontainer/api";
 
 import { db } from "src/db";
 
@@ -7,6 +8,7 @@ import useBin from "hooks/useBin";
 import { Layout } from "hooks/useLayout";
 import { writeFile } from "hooks/useCodeStore";
 
+import htmlFile from "utils/fst/html";
 import { languageToExtensionMap, languageToFilePrefix } from "utils/code";
 
 const DELAY = 500;
@@ -33,7 +35,12 @@ export default function useCodeSync(
           bin.extensionEnabled[language]?.preprocessor || "none"
         ]
       }`;
-      writeFile(fileName, code);
+      let updatedCode = code;
+      if (language === "html") {
+        updatedCode = (htmlFile(code, bin.extensionEnabled) as FileNode)?.file
+          ?.contents as string;
+      }
+      writeFile(fileName, updatedCode);
     }, DELAY);
   };
 

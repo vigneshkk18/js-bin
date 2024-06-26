@@ -3,6 +3,7 @@ import { FileSystemTree } from "@webcontainer/api";
 import jsFile from "utils/fst/js";
 import cssFile from "utils/fst/css";
 import htmlFile from "utils/fst/html";
+import reactFile from "utils/fst/react";
 import viteConfigFile from "utils/fst/viteConfig";
 import { packageJSONFile } from "utils/default-codes/package-json";
 import { cssPreProcessorExtension, jsPreProcessorExtension } from "utils/code";
@@ -24,6 +25,7 @@ export const transformPenToFileSystemTree = (bin: Bin) => {
   ] = jsFile(bin.js);
   fileSystemTree["package.json"] = packageJSONFile;
   fileSystemTree["vite.config.js"] = viteConfigFile(bin.extensionEnabled);
+  fileSystemTree["main.tsx"] = reactFile();
   return fileSystemTree;
 };
 
