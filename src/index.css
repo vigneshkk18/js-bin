@@ -2,14 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.view:has(.cm-focused) {
+  background-color: white;
+}
+
 .cm-editor.cm-focused {
   outline: none;
+}
+
+.cm-editor.cm-focused .cm-gutters {
+  background-color: white;
 }
 
 .cm-editor div.cm-gutters {
   border-width: 0px;
 }
-
 
 .loading-dialog,
 .loading-dialog div {

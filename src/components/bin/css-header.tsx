@@ -28,7 +28,7 @@ export default function CSSHeader() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="w-full relative">
+    <header className="w-full relative layout-header">
       <Button
         onClick={openMenu}
         className="border-0 flex items-center gap-1 p-2 px-3 text-secondary"
