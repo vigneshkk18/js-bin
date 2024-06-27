@@ -95,6 +95,7 @@ export const addDep = async (deps: string[]) => {
 export const restartServer = async () => {
   const container = codeStoreHook.getState();
   if (!container.instance) return;
+  codeStoreHook.setState({ ...container, devUrl: "" });
   container.devProcess?.kill();
   const p = await container.instance.spawn("npm", ["run", "dev"]);
   p.output.pipeTo(
@@ -104,7 +105,7 @@ export const restartServer = async () => {
       },
     })
   );
-  codeStoreHook.setState({ ...container, devProcess: p });
+  codeStoreHook.setState({ ...codeStoreHook.getState(), devProcess: p });
 };
 
 export const writeFile = async (path: string, code: string) => {
