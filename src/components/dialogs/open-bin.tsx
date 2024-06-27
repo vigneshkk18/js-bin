@@ -41,7 +41,7 @@ export const Content = () => {
   const updateSearch: React.ChangeEventHandler<HTMLInputElement> = (e) =>
     setSearch(e.target.value);
 
-  if (!bins || !bin) return null;
+  if (!bins) return null;
 
   return (
     <div className="w-full md:w-96">
@@ -51,13 +51,13 @@ export const Content = () => {
         placeholder="Search..."
         className="p-2 px-4 w-full bg-inactiveLight/50 focus:bg-inactiveLight rounded-sm outline-none"
       />
-      <ul className="my-4 flex flex-col gap-2 w-full max-h-56 sm:max-h-96 overflow-y-auto">
+      <ul className="my-4 p-1 flex flex-col gap-2 w-full max-h-56 sm:max-h-96 overflow-y-auto">
         {bins.length ? (
           bins.map((currBin) => (
             <BinItem
               key={currBin.id}
               bin={currBin}
-              disabled={bin.id === currBin.id}
+              disabled={bin?.id === currBin.id}
             />
           ))
         ) : (

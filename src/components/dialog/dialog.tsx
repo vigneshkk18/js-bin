@@ -3,21 +3,25 @@ import { ReactNode, forwardRef, useImperativeHandle, useRef } from "react";
 
 interface Dialog {
   title?: string;
+  closable?: boolean;
   action?: (props: { onClose: () => void }) => ReactNode;
   content: ReactNode;
 }
 
 const Dialog = forwardRef(
-  ({ title = "", content, action: Action = () => "" }: Dialog, ref: any) => {
+  (
+    { title = "", content, action: Action = () => "", closable = true }: Dialog,
+    ref: any
+  ) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
     const openDialog = () => {
       if (!dialogRef.current) return;
       dialogRef.current.showModal();
 
-      const dialogCoords = dialogRef.current.getBoundingClientRect();
-
       const fn = (ev: MouseEvent) => {
+        if (!dialogRef.current) return;
+        const dialogCoords = dialogRef.current.getBoundingClientRect();
         if (
           ev.clientX >= dialogCoords.x &&
           ev.clientX <= dialogCoords.x + dialogCoords.width &&
@@ -28,7 +32,7 @@ const Dialog = forwardRef(
         closeDialog();
         window.removeEventListener("click", fn);
       };
-      setTimeout(() => window.addEventListener("click", fn), 0);
+      if (closable) setTimeout(() => window.addEventListener("click", fn), 0);
     };
 
     const closeDialog = () => {
@@ -48,7 +52,7 @@ const Dialog = forwardRef(
         {title && <h1 className="text-2xl font-bold mb-3">{title}</h1>}
         {content}
         <form className="w-full mt-3" method="dialog">
-          <Action onClose={closeDialog} />
+          <Action onClose={closable ? closeDialog : () => {}} />
         </form>
       </dialog>,
       document.body

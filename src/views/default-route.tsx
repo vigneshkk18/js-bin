@@ -1,10 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import shortUUID from "short-uuid";
 import { useLocation } from "wouter";
 import { FileNode } from "@webcontainer/api";
 
 import { db } from "src/db";
 
+import Button from "ui/button";
+
+import Dialog from "components/dialog/dialog";
+import { Content } from "components/dialogs/open-bin";
 import DefaultView from "components/bin/default-view";
 
 import jsFile from "utils/fst/js";
@@ -16,9 +20,10 @@ import { defaultHTML } from "utils/default-codes/html";
 import { Bin } from "types/bin";
 
 export default function DefaultRoute() {
+  const modal = useRef<{ openDialog: () => void }>(null);
   const [, navigate] = useLocation();
 
-  useEffect(() => {
+  const createNewBin = async () => {
     const newBin: Bin = {
       id: shortUUID.generate(),
       title: "Untitled",
@@ -31,21 +36,35 @@ export default function DefaultRoute() {
         js: { packages: ["vite", "typescript"] },
       },
     };
+    try {
+      await db.bins.add(newBin);
+      navigate("/" + newBin.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    const timer = setTimeout(async () => {
-      try {
-        await db.bins.add(newBin);
-        navigate("/" + newBin.id);
-      } catch (error) {
-        console.error(error);
-      }
-    }, 0);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!modal.current) return;
+    modal.current.openDialog();
   }, []);
 
   return (
     <main className="h-[calc(100vh-41px)] flex items-center justify-center">
+      <Dialog
+        ref={modal}
+        closable={false}
+        title="Create New / Open Existing Bin"
+        content={<Content />}
+        action={() => (
+          <Button
+            onClick={createNewBin}
+            className="bg-secondary text-white w-full rounded-md"
+          >
+            Create New Bin
+          </Button>
+        )}
+      />
       <DefaultView />
     </main>
   );

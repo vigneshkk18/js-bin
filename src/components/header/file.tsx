@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import { useRef, useState } from "react";
 
 import Button from "ui/button";
@@ -29,6 +29,7 @@ export default function File() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     actions: (_p: { onClose: () => void }) => <></>,
   });
+  const [isBinPage] = useRoute("/:binId/");
   const [, navigate] = useLocation();
   const dialogRef = useRef<{ openDialog: () => void }>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +75,9 @@ export default function File() {
   };
 
   useShortcut(
-    { key: "delete", ctrlKey: true, shiftKey: true },
+    isBinPage
+      ? { key: "delete", ctrlKey: true, shiftKey: true }
+      : { key: "None" },
     onMenuClick("delete")
   );
 

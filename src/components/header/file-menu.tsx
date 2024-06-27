@@ -1,3 +1,5 @@
+import { useRoute } from "wouter";
+
 interface MenuOption {
   label: string;
   shortcut?: string;
@@ -23,6 +25,7 @@ interface FileMenu {
 }
 
 export default function FileMenu({ isOpen, onMenuClick, closeMenu }: FileMenu) {
+  const [isBinPage] = useRoute("/:binId/");
   if (!isOpen) return null;
 
   return (
@@ -46,12 +49,16 @@ export default function FileMenu({ isOpen, onMenuClick, closeMenu }: FileMenu) {
             label="Open"
             shortcut="ctrl+shift+o"
           />
-          <MenuOption onClick={onMenuClick("title")} label="Add Title" />
-          <MenuOption
-            onClick={onMenuClick("delete")}
-            label="Delete"
-            shortcut="ctrl+shift+del"
-          />
+          {isBinPage && (
+            <>
+              <MenuOption onClick={onMenuClick("title")} label="Add Title" />
+              <MenuOption
+                onClick={onMenuClick("delete")}
+                label="Delete"
+                shortcut="ctrl+shift+del"
+              />
+            </>
+          )}
         </ul>
       </div>
     </>
