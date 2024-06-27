@@ -1,11 +1,15 @@
 interface MenuOption {
   label: string;
   shortcut?: string;
+  onClick: () => void;
 }
 
-function MenuOption({ label, shortcut }: MenuOption) {
+function MenuOption({ label, onClick, shortcut }: MenuOption) {
   return (
-    <li className="p-2 px-4 hover:bg-inactiveLight cursor-pointer flex justify-between">
+    <li
+      onClick={onClick}
+      className="p-2 px-4 hover:bg-inactiveLight cursor-pointer flex justify-between"
+    >
       <span>{label}</span>
       {shortcut && <code>{shortcut}</code>}
     </li>
@@ -15,9 +19,10 @@ function MenuOption({ label, shortcut }: MenuOption) {
 interface FileMenu {
   isOpen: boolean;
   closeMenu: () => void;
+  onMenuClick: (target: "open" | "title" | "delete" | "new") => () => void;
 }
 
-export default function FileMenu({ isOpen, closeMenu }: FileMenu) {
+export default function FileMenu({ isOpen, onMenuClick, closeMenu }: FileMenu) {
   if (!isOpen) return null;
 
   return (
@@ -31,10 +36,22 @@ export default function FileMenu({ isOpen, closeMenu }: FileMenu) {
         className="absolute top-[41px] border border-light shadow-xl bg-white w-[250px] z-50"
       >
         <ul>
-          <MenuOption label="New" shortcut="ctrl+shift+n" />
-          <MenuOption label="Open" shortcut="ctrl+shift+o" />
-          <MenuOption label="Add Title" />
-          <MenuOption label="Delete" shortcut="ctrl+shift+del" />
+          <MenuOption
+            onClick={onMenuClick("new")}
+            label="New"
+            shortcut="ctrl+shift+n"
+          />
+          <MenuOption
+            onClick={onMenuClick("open")}
+            label="Open"
+            shortcut="ctrl+shift+o"
+          />
+          <MenuOption onClick={onMenuClick("title")} label="Add Title" />
+          <MenuOption
+            onClick={onMenuClick("delete")}
+            label="Delete"
+            shortcut="ctrl+shift+del"
+          />
         </ul>
       </div>
     </>

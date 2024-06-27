@@ -19,6 +19,26 @@ export const fetchBin = async (binId: string) => {
   }
 };
 
+let timer: number | null = null;
+
+export const updateTitle = (title: string) => {
+  const bin = binHook.getState();
+  if (!bin) return;
+
+  binHook.setState({ ...bin, title });
+
+  const fn = async () => {
+    try {
+      await db.bins.update(bin?.id, { title });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (timer) clearTimeout(timer);
+  timer = setTimeout(fn, 500);
+};
+
 export const updateCode = async (language: Language, code: string) => {
   binHook.setState({ ...binHook.getState(), [language]: code });
 };

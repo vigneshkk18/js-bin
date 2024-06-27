@@ -9,3 +9,6 @@ export const keys = <T extends Record<string, unknown>>(obj: T) => {
 
 export const split = <T>(str: string, separator: string) =>
   str.split(separator) as T[];
+
+export const isNullish = <T>(o: T | null | undefined): o is null | undefined =>
+  o === null || o === undefined;
