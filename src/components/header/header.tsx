@@ -18,7 +18,7 @@ export default function Header() {
           <img src="/logo.svg" alt="Logo" className="w-6 h-6" />
         </div>
         <File />
-        <Button className="px-4 rounded-md" onClick={addPackage}>
+        <Button className="px-4 rounded-md self-center" onClick={addPackage}>
           Add Packages
         </Button>
         <NPMDialog ref={dialog} />

@@ -2,15 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-.view:has(.cm-focused) {
-  background-color: white;
-}
-
 .cm-editor.cm-focused {
   outline: none;
 }
 
-.cm-editor.cm-focused .cm-gutters {
+.view-focused .cm-gutters,
+.view-focused {
   background-color: white;
 }
 

@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useRef } from "react";
 
 import useLayout, { Layout } from "hooks/useLayout";
 
@@ -14,12 +14,37 @@ export default function WithView({
   children,
   layoutName,
 }: PropsWithChildren<WithView>) {
+  const ref = useRef<HTMLDivElement>(null);
   const { layout } = useLayout();
+
+  function onClick() {
+    if (!ref.current) return;
+    const coords = ref.current.getBoundingClientRect();
+
+    const fn = (event: MouseEvent) => {
+      if (!ref.current) return;
+      if (
+        event.clientX >= coords.x &&
+        event.clientX <= coords.x + coords.width &&
+        event.clientY >= coords.y &&
+        event.clientY <= coords.y + coords.height
+      )
+        return;
+      ref.current.classList.remove("view-focused");
+      window.removeEventListener("click", fn);
+    };
+
+    ref.current.classList.add("view-focused");
+    setTimeout(() => window.addEventListener("click", fn), 500);
+  }
 
   return [
     <div
       key={`view-wrapper-${layoutName}`}
       id={`view-${layoutName}`}
+      onClick={onClick}
+      ref={ref}
+      tabIndex={0}
       style={{ display: layout[layoutName] ? undefined : "none" }}
       className="h-full view"
     >

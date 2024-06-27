@@ -5,7 +5,16 @@ import WithView from "components/bin/with-view";
 import JSHeader from "components/bin/js-header";
 
 import useCodeSync from "hooks/useCodeSync";
-import useBin, { updateCode } from "src/hooks/useBin";
+import useBin, { updateCode } from "hooks/useBin";
+
+import { Bin } from "types/bin";
+
+const extension = (extension?: Bin["extensionEnabled"]) => [
+  javascript({
+    jsx: extension?.js?.preprocessor === "react",
+    typescript: extension?.js?.preprocessor === "typescript",
+  }),
+];
 
 function View() {
   const bin = useBin();
@@ -16,18 +25,6 @@ function View() {
     sync(code);
   }
 
-  function onFocus(event: React.FocusEvent) {
-    const el = event.target as HTMLDivElement;
-    el.style.backgroundColor = "#fff";
-    el.style.cursor = "text";
-  }
-
-  function onBlur(event: React.FocusEvent) {
-    const el = event.target as HTMLDivElement;
-    el.style.backgroundColor = "";
-    el.style.cursor = "";
-  }
-
   return (
     <>
       <JSHeader />
@@ -36,10 +33,8 @@ function View() {
         theme={"none"}
         height="100%"
         style={{ height: "100%" }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        className="focus-visible:outline-none outline-none bg-panel cursor-default"
-        extensions={[javascript({ jsx: true, typescript: true })]}
+        className="focus-visible:outline-none outline-none cursor-default"
+        extensions={extension(bin?.extensionEnabled)}
         onChange={onChange}
       />
     </>

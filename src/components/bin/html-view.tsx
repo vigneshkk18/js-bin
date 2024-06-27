@@ -16,18 +16,6 @@ function View() {
     sync(code);
   }
 
-  function onFocus(event: React.FocusEvent) {
-    const el = event.target as HTMLDivElement;
-    el.style.backgroundColor = "#fff";
-    el.style.cursor = "text";
-  }
-
-  function onBlur(event: React.FocusEvent) {
-    const el = event.target as HTMLDivElement;
-    el.style.backgroundColor = "";
-    el.style.cursor = "";
-  }
-
   return (
     <>
       <HTMLHeader />
@@ -36,9 +24,7 @@ function View() {
         theme={"none"}
         height="100%"
         style={{ height: "100%" }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        className="focus-visible:outline-none outline-none bg-panel cursor-default"
+        className="focus-visible:outline-none outline-none cursor-default"
         extensions={[html({ autoCloseTags: true, matchClosingTags: true })]}
         onChange={onChange}
       />

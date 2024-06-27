@@ -8,7 +8,7 @@ function View() {
   return (
     <iframe
       srcDoc={!devUrl ? "<h1>Loading...</h1>" : undefined}
-      className="bg-white w-full h-full"
+      className="w-full h-full pointer-events-none"
       title="Dev Preview"
       src={!devUrl ? undefined : devUrl}
       referrerPolicy="no-referrer"
