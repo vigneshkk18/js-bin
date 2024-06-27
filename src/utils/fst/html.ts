@@ -31,6 +31,17 @@ export default function htmlFile(
     ${!isReact ? defaultImport(extension) : reactImport()}
   </head>
   <body>
+    <script>
+      (function() {
+        const originalLog = console.log;
+        console.log = function(...args) {
+            // Send the log messages to your app
+            window.parent.postMessage({ type: 'console-log', args }, '*');
+            // Call the original console.log function
+            originalLog.apply(console, args);
+        };
+      })();
+    </script>
     ${extension?.js?.preprocessor === "react" ? "<div id='root'></div>" : ""}
     ${body}
   </body>

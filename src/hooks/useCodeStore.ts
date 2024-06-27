@@ -32,7 +32,6 @@ export const bootContainer = async (binId: string) => {
     if (!bin) throw new Error("Bin Not Found!!!");
 
     updatedContainer.instance.on("server-ready", (_, url) => {
-      console.log(codeStoreHook.getState());
       codeStoreHook.setState({
         ...codeStoreHook.getState(),
         devUrl: url,
