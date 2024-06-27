@@ -13,6 +13,7 @@ import DefaultView from "components/bin/default-view";
 
 import jsFile from "utils/fst/js";
 import cssFile from "utils/fst/css";
+import { defaultPkg } from "utils/code";
 import { defaultJS } from "utils/default-codes/js";
 import { defaultCSS } from "utils/default-codes/css";
 import { defaultHTML } from "utils/default-codes/html";
@@ -33,7 +34,7 @@ export default function DefaultRoute() {
       extensionEnabled: {
         html: {},
         css: {},
-        js: { packages: ["vite", "typescript"] },
+        js: { packages: defaultPkg },
       },
     };
     try {
@@ -56,16 +57,19 @@ export default function DefaultRoute() {
         closable={false}
         title="Create New / Open Existing Bin"
         content={<Content />}
-        action={() => (
-          <Button
-            onClick={createNewBin}
-            className="bg-secondary text-white w-full rounded-md"
-          >
-            Create New Bin
-          </Button>
-        )}
+        action={Action(createNewBin)}
       />
       <DefaultView />
     </main>
   );
 }
+
+const Action = (createNewBin: () => Promise<void>) => () =>
+  (
+    <Button
+      onClick={createNewBin}
+      className="bg-secondary text-white w-full rounded-md"
+    >
+      Create New Bin
+    </Button>
+  );

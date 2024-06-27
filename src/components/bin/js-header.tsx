@@ -37,7 +37,7 @@ export default function JSHeader() {
         <span>
           {
             jsPreProcessorLabel[
-              (bin?.extensionEnabled?.js?.preprocessor ||
+              (bin?.extensionEnabled?.js?.preprocessor ??
                 "none") as JSPreProcessor
             ]
           }
@@ -55,7 +55,7 @@ interface MenuOption {
   onClick: () => Promise<void>;
 }
 
-function MenuOption({ label, active, onClick }: MenuOption) {
+function MenuOption({ label, active, onClick }: Readonly<MenuOption>) {
   return (
     <li
       onClick={onClick}
@@ -94,7 +94,7 @@ function Menu({ isOpen, closeMenu }: Menu) {
         await writeFile("vite.config.js", vite);
       }
 
-      const oldPreprocessor = bin.extensionEnabled.js?.preprocessor || "none";
+      const oldPreprocessor = bin.extensionEnabled.js?.preprocessor ?? "none";
       const oldPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[oldPreprocessor]}`;
       const newPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[preprocessor]}`;
       await renameFile(oldPath, newPath);

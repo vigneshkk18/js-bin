@@ -4,6 +4,8 @@ export type Language = Extract<Layout, "html" | "css" | "js">;
 export type CSSPreProcessor = "none" | "scss" | "sass" | "less" | "stylus";
 export type JSPreProcessor = "none" | "typescript" | "react";
 
+export const defaultPkg = ["vite@5.2.0", "typescript@5.2.2"];
+
 export const htmlPreProcessorExtension: Record<string, string> = {
   none: ".html",
 };
@@ -19,10 +21,10 @@ export const cssPreProcessorExtension: Record<string, string> = {
 
 export const cssPreProcessorPkg: Record<string, string[]> = {
   none: [],
-  scss: ["sass"],
-  sass: ["sass"],
-  less: ["less"],
-  stylus: ["stylus"],
+  scss: ["sass@1.77.6"],
+  sass: ["sass@1.77.6"],
+  less: ["less@4.2.0"],
+  stylus: ["stylus@0.63.0"],
 };
 
 export const jsPreProcessorExtension: Record<string, string> = {
@@ -32,9 +34,9 @@ export const jsPreProcessorExtension: Record<string, string> = {
 };
 
 export const jsPreProcessorPkg: Record<string, string[]> = {
-  none: [""],
-  typescript: [""],
-  react: ["react", "react-dom", "@vitejs/plugin-react"],
+  none: [],
+  typescript: [],
+  react: ["react@18.2.0", "react-dom@18.2.0", "@vitejs/plugin-react@4.2.1"],
 };
 
 export const languageToFilePrefix: Record<Language, string> = {
