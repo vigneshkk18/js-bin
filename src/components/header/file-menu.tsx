@@ -36,7 +36,7 @@ export default function FileMenu({ isOpen, onMenuClick, closeMenu }: FileMenu) {
       ></div>
       <div
         id="file-menu"
-        className="absolute top-[41px] border border-light shadow-xl bg-white w-[250px] z-50"
+        className="absolute top-[40px] border border-light shadow-xl bg-white w-[250px] z-50"
       >
         <ul>
           <MenuOption

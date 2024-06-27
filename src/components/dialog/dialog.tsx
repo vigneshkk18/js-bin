@@ -46,7 +46,7 @@ const Dialog = forwardRef(
 
     return createPortal(
       <dialog
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 p-6 rounded-md shadow-lg max-h-none max-w-none w-max h-max backdrop:bg-black/50"
+        className="w-[90%] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 p-6 rounded-md shadow-lg max-h-none max-w-none sm:w-max h-max backdrop:bg-black/50"
         ref={dialogRef}
       >
         {title && <h1 className="text-2xl font-bold mb-3">{title}</h1>}

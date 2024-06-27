@@ -1,5 +1,5 @@
 import { useLocation, useRoute } from "wouter";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "ui/button";
 import FileMenu from "components/header/file-menu";
@@ -21,6 +21,8 @@ import {
 } from "components/dialogs/title-bin";
 
 import useShortcut from "hooks/useShortcut";
+
+export type Target = "delete" | "title" | "open" | "new";
 
 export default function File() {
   const [dialog, setDialog] = useState({
@@ -65,7 +67,7 @@ export default function File() {
     });
   };
 
-  const onMenuClick = (target: "delete" | "title" | "open" | "new") => () => {
+  const onMenuClick = (target: Target) => () => {
     closeMenu();
     dialogRef.current?.openDialog();
     if (target === "delete") onDeleteMenuClick();
@@ -73,6 +75,19 @@ export default function File() {
     if (target === "new") onNewMenuClick();
     if (target === "title") onTitleMenuClick();
   };
+
+  useEffect(() => {
+    const fn = (
+      event: MessageEvent<{ type: "open-dialog"; target: Target }>
+    ) => {
+      if (event.data.type !== "open-dialog") return;
+      onMenuClick(event.data.target)();
+    };
+
+    window.addEventListener("message", fn);
+    return () => window.removeEventListener("message", fn);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useShortcut(
     isBinPage
@@ -86,10 +101,10 @@ export default function File() {
   useShortcut({ key: "n", ctrlKey: true, shiftKey: true }, onNewMenuClick);
 
   return (
-    <div className="relative hidden sm:block">
+    <div className="relative hidden sm:block h-full">
       <Button
         onClick={openMenu}
-        className="flex items-center gap-1 text-sm px-2 border-x border-transparent hover:bg-buttonHover hover:border-x-button"
+        className="flex h-[40px] items-center gap-1 text-sm px-2 border-x border-transparent hover:bg-buttonHover hover:border-x-button"
       >
         <span>File</span>
         <CaretDown width={10} height={10} color="#232323" />
