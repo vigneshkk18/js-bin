@@ -23,9 +23,11 @@ export default function useCodeStore() {
 }
 
 export const bootContainer = async (binId: string) => {
-  const updatedContainer = {} as WebContainerState;
+  const updatedContainer = { ...codeStoreHook.getState() } as WebContainerState;
   try {
-    updatedContainer.instance = await WebContainer.boot();
+    if (!updatedContainer.instance) {
+      updatedContainer.instance = await WebContainer.boot();
+    }
     updatedContainer.ready = true;
 
     const bin = await db.bins.get(binId);
@@ -63,7 +65,6 @@ export const bootContainer = async (binId: string) => {
   } catch (error: any) {
     updatedContainer.error = error.message;
   } finally {
-    console.log(codeStoreHook.getState(), updatedContainer);
     codeStoreHook.setState({
       ...codeStoreHook.getState(),
       ...updatedContainer,
@@ -76,6 +77,19 @@ export const killContainer = () => {
   if (!instance) return;
   instance.teardown();
   codeStoreHook.setState(defaultContainer);
+};
+
+export const killServer = () => {
+  const store = codeStoreHook.getState();
+  const devProcess = store.devProcess;
+  if (!devProcess) return;
+  codeStoreHook.setState({
+    ...store,
+    devProcess: null,
+    ready: false,
+    devUrl: "",
+  });
+  devProcess.kill();
 };
 
 export const addDep = async (deps: string[]) => {
@@ -95,7 +109,7 @@ export const addDep = async (deps: string[]) => {
 export const restartServer = async () => {
   const container = codeStoreHook.getState();
   if (!container.instance) return;
-  codeStoreHook.setState({ ...container, devUrl: "" });
+  codeStoreHook.setState({ ...container, devUrl: "", ready: false });
   container.devProcess?.kill();
   const p = await container.instance.spawn("npm", ["run", "dev"]);
   p.output.pipeTo(
@@ -105,7 +119,11 @@ export const restartServer = async () => {
       },
     })
   );
-  codeStoreHook.setState({ ...codeStoreHook.getState(), devProcess: p });
+  codeStoreHook.setState({
+    ...codeStoreHook.getState(),
+    devProcess: p,
+    ready: true,
+  });
 };
 
 export const writeFile = async (path: string, code: string) => {

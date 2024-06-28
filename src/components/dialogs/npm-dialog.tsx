@@ -158,7 +158,7 @@ const Action = (installPackages: () => void) => {
       onClick={installPackages}
       className="w-full bg-secondary text-white"
     >
-      Install Packages
+      Update Packages
     </Button>
   );
 };
