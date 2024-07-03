@@ -13,12 +13,6 @@ export default function viteConfigFile(
 
 export default defineConfig({
   plugins: [${extensions?.js?.preprocessor === "react" ? reactPlugin : ""}],
-  server: {
-    headers: {
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-      'Cross-Origin-Opener-Policy': 'same-origin',
-    },
-  },
 });`,
     },
   };
