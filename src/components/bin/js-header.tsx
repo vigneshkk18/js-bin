@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { useParams } from "wouter";
-import { FileNode } from "@webcontainer/api";
 
 import Button from "ui/button";
 
 import useBin, { updateBin } from "hooks/useBin";
 import { hideLoading, showLoading } from "hooks/useLoading";
-import { addDep, renameFile, writeFile } from "hooks/useCodeStore";
 
 import {
-  JSPreProcessor,
-  jsPreProcessorExtension,
-  jsPreProcessorPkg,
-  jsPreProcessorLabel,
-  languageToFilePrefix,
-} from "utils/code";
-import htmlFile from "utils/fst/html";
+  defaultHTML,
+  defaultHTMLReactHelper,
+  defaultReactHelper,
+} from "utils/default-codes/html";
 import { entries } from "utils/common";
-import viteConfigFile from "utils/fst/viteConfig";
+import { defaultJS } from "utils/default-codes/js";
+import { jsPreProcessorPkg, jsPreProcessorLabel } from "utils/code";
 
 import CaretDown from "assets/caret-down";
+
+import { JSPreProcessor } from "types/bin";
 
 export default function JSHeader() {
   const bin = useBin();
@@ -37,8 +35,7 @@ export default function JSHeader() {
         <span>
           {
             jsPreProcessorLabel[
-              (bin?.extensionEnabled?.js?.preprocessor ??
-                "none") as JSPreProcessor
+              bin?.extensionEnabled?.js?.preprocessor ?? "none"
             ]
           }
         </span>
@@ -80,33 +77,6 @@ function Menu({ isOpen, closeMenu }: Menu) {
     if (!bin) return;
     showLoading();
     try {
-      if (jsPreProcessorPkg[preprocessor].length) {
-        await addDep(jsPreProcessorPkg[preprocessor]);
-      }
-
-      if (preprocessor === "react") {
-        const vite = (
-          viteConfigFile({
-            ...bin.extensionEnabled,
-            js: { preprocessor },
-          }) as FileNode
-        )?.file?.contents as string;
-        await writeFile("vite.config.js", vite);
-      }
-
-      const oldPreprocessor = bin.extensionEnabled.js?.preprocessor ?? "none";
-      const oldPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[oldPreprocessor]}`;
-      const newPath = `${languageToFilePrefix.js}${jsPreProcessorExtension[preprocessor]}`;
-      await renameFile(oldPath, newPath);
-      const html = (
-        htmlFile(bin.html, {
-          ...bin.extensionEnabled,
-          js: { preprocessor },
-        }) as FileNode
-      )?.file?.contents as string;
-      await writeFile("index.html", html);
-      closeMenu();
-
       const updatedBin = { ...bin };
       updatedBin.extensionEnabled.js = {
         ...updatedBin.extensionEnabled.js,
@@ -118,7 +88,19 @@ function Menu({ isOpen, closeMenu }: Menu) {
           ])
         ),
       };
+
+      if (updatedBin.extensionEnabled?.js?.preprocessor === "react") {
+        updatedBin.html = updatedBin.html.replace(
+          /<body[^>]*>([\s\S]*?)<\/body>/,
+          defaultHTMLReactHelper
+        );
+        updatedBin.js = defaultReactHelper;
+      } else {
+        updatedBin.html = defaultHTML;
+        updatedBin.js = defaultJS;
+      }
       await updateBin(binId, updatedBin);
+      closeMenu();
     } catch (err) {
       console.error(err);
     } finally {

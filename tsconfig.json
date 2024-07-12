@@ -50,6 +50,15 @@
       "types/*": [
         "src/types/*"
       ],
+      "bundler/*": [
+        "src/bundler/*"
+      ],
+      "transpiler/*": [
+        "src/transpiler/*"
+      ],
+      "fs/*": [
+        "src/fs/*"
+      ],
     }
   },
   "include": [

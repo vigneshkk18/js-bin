@@ -4,7 +4,6 @@ import { javascript } from "@codemirror/lang-javascript";
 import WithView from "components/bin/with-view";
 import JSHeader from "components/bin/js-header";
 
-import useCodeSync from "hooks/useCodeSync";
 import useBin, { updateCode } from "hooks/useBin";
 
 import { Bin } from "types/bin";
@@ -18,18 +17,16 @@ const extension = (extension?: Bin["extensionEnabled"]) => [
 
 function View() {
   const bin = useBin();
-  const { sync } = useCodeSync("js");
 
   function onChange(code: string) {
     updateCode("js", code);
-    sync(code);
   }
 
   return (
     <>
       <JSHeader />
       <ReactCodeMirror
-        value={bin?.js || ""}
+        value={bin?.js ?? ""}
         theme={"none"}
         height="100%"
         style={{ height: "100%" }}

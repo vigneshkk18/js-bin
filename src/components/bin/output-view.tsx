@@ -1,19 +1,20 @@
 import WithView from "components/bin/with-view";
 import OutputHeader from "components/bin/output-header";
+import OutputErrorOverlay from "components/bin/output-error-overlay";
 
 import useCodeStore from "hooks/useCodeStore";
 
 function View() {
-  const { devUrl } = useCodeStore();
+  const { html, ready } = useCodeStore();
 
   return (
     <>
       <OutputHeader />
+      <OutputErrorOverlay />
       <iframe
-        srcDoc={!devUrl ? "<h1>Loading...</h1>" : undefined}
-        className="w-full h-full pointer-events-none"
+        srcDoc={!ready ? "<h1>Loading...</h1>" : html}
+        className="w-full h-full"
         title="Dev Preview"
-        src={!devUrl ? undefined : devUrl}
         referrerPolicy="no-referrer"
       />
     </>
