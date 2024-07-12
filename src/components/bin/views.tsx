@@ -10,7 +10,6 @@ import ConsoleView from "components/bin/console-view";
 import useLayout from "hooks/useLayout";
 import useResize from "hooks/useResize";
 import { fetchBin } from "hooks/useBin";
-import { bootContainer, killServer } from "hooks/useCodeStore";
 
 export default function Views() {
   useResize();
@@ -19,15 +18,8 @@ export default function Views() {
   const layoutSelected = Object.values(layout).some((selected) => selected);
 
   useEffect(() => {
-    return () => {
-      killServer();
-    };
-  }, []);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       fetchBin(binId);
-      bootContainer(binId);
     }, 0);
     return () => {
       clearTimeout(timer);

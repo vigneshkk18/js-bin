@@ -1,22 +1,52 @@
-import { jsPreProcessorExtension } from "utils/code";
-
-import { Bin } from "types/bin";
-
-export const defaultHTML = `<head></head>
+export const defaultHTML = `<head>
+</head>
 <body>
-  <h3>Start Editing html, css, script files to see changes.</h3>
+  <h3>JSBin</h3>
+</body>
+`;
+
+export const defaultHTMLReactHelper = `<body>
+  <div id="root"></div>
 </body>`;
 
-export const defaultImport = (extension?: Bin["extensionEnabled"]) =>
-  `<script type="module" src="/script${
-    jsPreProcessorExtension[extension?.js?.preprocessor || "none"]
-  }"></script>`;
+export const defaultReactHelper = `import React from "react";
+import { createRoot } from "react-dom/client";
+const App = () => {
+  return <h3>JSBin</h3>
+};
 
-export const reactImport = () =>
-  `<script type="module" src="/main.tsx"></script>`;
+const container = createRoot(document.getElementById("root"));
+container.render(<App />);
+`;
 
-export const reactHelper = `import ReactDom from "react-dom/client";
-import App from "./script.tsx";
-const root = document.getElementById("root");
-ReactDom.createRoot(root).render(<App />);
+export const constructHTML = (
+  head: string,
+  body: string,
+  importsMap: string,
+  script: string,
+  styles: string
+) => `
+<html>
+  <head>
+    ${head}
+    <title>JSBin</title>
+    ${importsMap}
+    <style>${styles ?? ""}</style>
+  </head>
+  <body>
+    ${body}
+    <script type="module">${script}</script>
+    <script>
+      (function() {
+        const originalLog = console.log;
+        console.log = function(...args) {
+            // Send the log messages to your app
+            window.parent.postMessage({ type: 'console-log', args }, '*');
+            // Call the original console.log function
+            originalLog.apply(console, args);
+        };
+      })();
+    </script>
+  </body>
+</html>
 `;

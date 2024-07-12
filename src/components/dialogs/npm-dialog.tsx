@@ -11,14 +11,12 @@ import Button from "ui/button";
 
 import Dialog from "components/dialog/dialog";
 
-import { addDep } from "hooks/useCodeStore";
 import useBin, { updateBin } from "hooks/useBin";
 import { hideLoading, showLoading } from "hooks/useLoading";
 
 import Add from "assets/add";
 import Trash from "assets/trash";
 import { entries } from "utils/common";
-import { defaultPkg } from "utils/code";
 
 import { NPMResponse } from "types/npm";
 
@@ -85,13 +83,11 @@ const NPMDialog = forwardRef(function (_props: any, ref: any) {
       showLoading();
       const deps = Array.from(
         new Set([
-          ...defaultPkg,
           ...entries(installedPkgList)
             .filter(([, installed]) => installed)
             .map(([key]) => key),
         ])
       );
-      await addDep(deps);
       await updateBin(bin.id, {
         ...bin,
         extensionEnabled: {

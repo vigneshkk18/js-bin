@@ -1,24 +1,17 @@
 import { useState } from "react";
 import { useParams } from "wouter";
-import { FileNode } from "@webcontainer/api";
 
 import Button from "ui/button";
 
 import useBin, { updateBin } from "hooks/useBin";
 import { hideLoading, showLoading } from "hooks/useLoading";
-import { addDep, renameFile, writeFile } from "hooks/useCodeStore";
 
-import {
-  CSSPreProcessor,
-  cssPreProcessorExtension,
-  cssPreProcessorLabel,
-  cssPreProcessorPkg,
-  languageToFilePrefix,
-} from "utils/code";
+import { cssPreProcessorLabel, cssPreProcessorPkg } from "utils/code";
 import { entries } from "utils/common";
-import htmlFile from "utils/fst/html";
 
 import CaretDown from "assets/caret-down";
+
+import { CSSPreProcessor } from "types/bin";
 
 export default function CSSHeader() {
   const bin = useBin();
@@ -36,8 +29,7 @@ export default function CSSHeader() {
         <span>
           {
             cssPreProcessorLabel[
-              (bin?.extensionEnabled?.css?.preprocessor ||
-                "none") as CSSPreProcessor
+              bin?.extensionEnabled?.css?.preprocessor ?? "none"
             ]
           }
         </span>
@@ -79,23 +71,6 @@ function Menu({ isOpen, closeMenu }: Menu) {
     if (!bin) return;
     showLoading();
     try {
-      if (cssPreProcessorPkg[preprocessor].length) {
-        await addDep(cssPreProcessorPkg[preprocessor]);
-      }
-
-      const oldPreprocessor = bin.extensionEnabled.css?.preprocessor || "none";
-      const oldPath = `${languageToFilePrefix.css}${cssPreProcessorExtension[oldPreprocessor]}`;
-      const newPath = `${languageToFilePrefix.css}${cssPreProcessorExtension[preprocessor]}`;
-      await renameFile(oldPath, newPath);
-      const html = (
-        htmlFile(bin.html, {
-          ...bin.extensionEnabled,
-          css: { preprocessor },
-        }) as FileNode
-      )?.file?.contents as string;
-      await writeFile("index.html", html);
-      closeMenu();
-
       const updatedBin = { ...bin };
       updatedBin.extensionEnabled.css = {
         ...updatedBin.extensionEnabled.css,
@@ -111,6 +86,7 @@ function Menu({ isOpen, closeMenu }: Menu) {
         ),
       };
       await updateBin(binId, updatedBin);
+      closeMenu();
     } catch (err) {
       console.error(err);
     } finally {

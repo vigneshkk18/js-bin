@@ -44,7 +44,7 @@ function View() {
         itemContent={(index, log) => (
           <div className="flex items-center" key={index}>
             <AngleRight width={30} height={30} color="#3583FC" />
-            <span>{log}</span>
+            <span className="break-all basis-[89%]">{log}</span>
           </div>
         )}
       />

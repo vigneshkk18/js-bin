@@ -1,9 +1,15 @@
+import { Layout } from "hooks/useLayout";
+
+export type Language = Extract<Layout, "html" | "css" | "js">;
+export type CSSPreProcessor = "none" | "scss" | "sass";
+export type JSPreProcessor = "none" | "typescript" | "react";
+
 interface CSSExtension {
-  preprocessor: string;
+  preprocessor: CSSPreProcessor;
 }
 
 interface JSExtension {
-  preprocessor: string;
+  preprocessor: JSPreProcessor;
   packages: string[];
 }
 

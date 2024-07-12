@@ -37,7 +37,7 @@ export default function useLayout() {
       enabledLayout = split<Layout>(search, ",").reduce((acc, str) => {
         const supported = allowedLayouts.has(str);
         if (!str.length || !supported) return acc;
-        acc[str as Layout] = true;
+        acc[str] = true;
         return acc;
       }, {} as Record<Layout, boolean>);
     }
