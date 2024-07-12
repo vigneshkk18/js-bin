@@ -10,10 +10,15 @@ import { cssPreProcessorLabel, cssPreProcessorPkg } from "utils/code";
 import { entries } from "utils/common";
 
 import CaretDown from "assets/caret-down";
+import MagicWand from "assets/magic-wand";
 
 import { CSSPreProcessor } from "types/bin";
 
-export default function CSSHeader() {
+export default function CSSHeader({
+  onCodeFormat,
+}: {
+  onCodeFormat: () => void;
+}) {
   const bin = useBin();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +26,7 @@ export default function CSSHeader() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="w-full relative layout-header">
+    <header className="w-full relative layout-header flex justify-between">
       <Button
         onClick={openMenu}
         className="border-0 flex items-center gap-1 p-2 px-3 text-secondary"
@@ -36,6 +41,12 @@ export default function CSSHeader() {
         <CaretDown width={10} height={10} color="#00aaff" />
       </Button>
       <Menu isOpen={isOpen} closeMenu={closeMenu} />
+      <Button
+        onClick={onCodeFormat}
+        className="border-0 mt-1 mr-1 hover:bg-primary/10 p-1 rounded"
+      >
+        <MagicWand width={16} height={16} />
+      </Button>
     </header>
   );
 }

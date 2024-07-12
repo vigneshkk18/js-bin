@@ -4,10 +4,15 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 import WithView from "components/bin/with-view";
 import HTMLHeader from "components/bin/html-header";
 
-import useBin, { updateCode } from "hooks/useBin";
+import useBin, { updateCode, formatCode } from "hooks/useBin";
 
 function View() {
   const bin = useBin();
+
+  function onCodeFormat() {
+    if (!bin) return;
+    formatCode(bin.html, "html");
+  }
 
   function onChange(code: string) {
     updateCode("html", code);
@@ -15,7 +20,7 @@ function View() {
 
   return (
     <>
-      <HTMLHeader />
+      <HTMLHeader onCodeFormat={onCodeFormat} />
       <ReactCodeMirror
         value={bin?.html ?? ""}
         theme={"none"}
