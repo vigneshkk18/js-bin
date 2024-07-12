@@ -4,7 +4,10 @@ import { db } from "src/db";
 
 import { FS } from "fs/fs";
 import { bundler } from "bundler/index";
+import { formatter } from "formatter/index";
 import { Container, setCodeStore } from "hooks/useCodeStore";
+
+import { keys } from "utils/common";
 
 import { Bin, Language } from "types/bin";
 
@@ -20,17 +23,8 @@ export const fetchBin = async (binId: string) => {
 
     const fn = async () => {
       if (!bin) return;
-      FS.writeFile("html", bin.html);
-      FS.writeFile("css", bin.css);
-      FS.writeFile("js", bin.js);
-
-      const { html, error } = await bundler.bundle(bin.extensionEnabled);
-      const state: Partial<Container> = {
-        ready: true,
-        error,
-      };
-      if (!error) state.html = html;
-      setCodeStore(state);
+      syncCodeToFS(bin);
+      await bundleCode(bin);
     };
 
     binHook.setState(bin);
@@ -63,21 +57,11 @@ export const updateTitle = (title: string) => {
 export const updateCode = async (language: Language, code: string) => {
   const fn = async () => {
     const bin = binHook.getState();
-    FS.writeFile(language, code);
-
     if (!bin) return;
 
-    await db.bins.update(bin?.id, {
-      [language]: code,
-    });
-
-    const { html, error } = await bundler.bundle(bin.extensionEnabled);
-    const state: Partial<Container> = {
-      ready: true,
-      error,
-    };
-    if (!error) state.html = html;
-    setCodeStore(state);
+    syncCodeToFS({ [language]: code });
+    await syncCodeToDB(bin.id, { [language]: code });
+    await bundleCode({ ...bin, [language]: code });
   };
 
   binHook.setState({ ...binHook.getState(), [language]: code });
@@ -88,21 +72,14 @@ export const updateCode = async (language: Language, code: string) => {
 export const updateBin = async (binId: string, updatedBin: Bin) => {
   try {
     const fn = async () => {
-      FS.writeFile("html", updatedBin.html);
-      FS.writeFile("css", updatedBin.css);
-      FS.writeFile("js", updatedBin.js);
-
-      await db.bins.update(binId, updatedBin);
-
-      const bin = binHook.getState();
-      if (!bin) return;
-      const { html, error } = await bundler.bundle(bin.extensionEnabled);
-      const state: Partial<Container> = {
-        ready: true,
-        error,
+      const codeMap: Record<Language, string> = {
+        html: updatedBin.html,
+        css: updatedBin.css,
+        js: updatedBin.js,
       };
-      if (!error) state.html = html;
-      setCodeStore(state);
+      syncCodeToFS(codeMap);
+      await syncCodeToDB(binId, updatedBin);
+      await bundleCode(updatedBin);
     };
 
     await db.bins.update(binId, updatedBin);
@@ -113,4 +90,36 @@ export const updateBin = async (binId: string, updatedBin: Bin) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const syncCodeToFS = (codeMap: Partial<Record<Language, string>>) => {
+  keys(codeMap).forEach((language) => {
+    FS.writeFile(language, codeMap[language] ?? "");
+  });
+};
+
+const syncCodeToDB = async (
+  binId: string,
+  codeMap: Partial<Record<Language, string>>
+) => {
+  await db.bins.update(binId, codeMap);
+};
+
+const bundleCode = async (bin: Bin) => {
+  const { html, error } = await bundler.bundle(bin.extensionEnabled);
+  const state: Partial<Container> = {
+    ready: true,
+    error,
+  };
+  if (!error) state.html = html;
+  setCodeStore(state);
+};
+
+export const formatCode = async (code: string, language: Language) => {
+  const formatted = await formatter.format(code, language);
+  binHook.setState({ [language]: formatted });
+
+  const bin = binHook.getState();
+  if (!bin) return;
+  syncCodeToDB(bin.id, { [language]: formatted });
 };

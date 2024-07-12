@@ -4,7 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import WithView from "components/bin/with-view";
 import JSHeader from "components/bin/js-header";
 
-import useBin, { updateCode } from "hooks/useBin";
+import useBin, { formatCode, updateCode } from "hooks/useBin";
 
 import { Bin } from "types/bin";
 
@@ -18,13 +18,18 @@ const extension = (extension?: Bin["extensionEnabled"]) => [
 function View() {
   const bin = useBin();
 
+  function onCodeFormat() {
+    if (!bin) return;
+    formatCode(bin.js, "js");
+  }
+
   function onChange(code: string) {
     updateCode("js", code);
   }
 
   return (
     <>
-      <JSHeader />
+      <JSHeader onCodeFormat={onCodeFormat} />
       <ReactCodeMirror
         value={bin?.js ?? ""}
         theme={"none"}

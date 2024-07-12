@@ -5,7 +5,7 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 import WithView from "components/bin/with-view";
 import CSSHeader from "components/bin/css-header";
 
-import useBin, { updateCode } from "hooks/useBin";
+import useBin, { formatCode, updateCode } from "hooks/useBin";
 
 import { CSSPreProcessor } from "types/bin";
 
@@ -18,13 +18,18 @@ const extensionObj: Record<CSSPreProcessor, ReturnType<typeof css>[]> = {
 function View() {
   const bin = useBin();
 
+  function onCodeFormat() {
+    if (!bin) return;
+    formatCode(bin.css, "css");
+  }
+
   function onChange(code: string) {
     updateCode("css", code);
   }
 
   return (
     <>
-      <CSSHeader />
+      <CSSHeader onCodeFormat={onCodeFormat} />
       <ReactCodeMirror
         value={bin?.css ?? ""}
         theme={"none"}
