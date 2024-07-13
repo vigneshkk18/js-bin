@@ -12,3 +12,12 @@ export const split = <T>(str: string, separator: string) =>
 
 export const isNullish = <T>(o: T | null | undefined): o is null | undefined =>
   o === null || o === undefined;
+
+export const sortStrFn = (reverse: boolean) => (a: string, b: string) => {
+  if (reverse) return b.toLowerCase().localeCompare(a.toLowerCase());
+  return a.toLowerCase().localeCompare(b.toLowerCase());
+};
+
+export const sortStrList = (arr: string[], reverse: boolean) => {
+  return arr.sort(sortStrFn(reverse));
+};

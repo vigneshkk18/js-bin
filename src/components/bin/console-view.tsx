@@ -14,6 +14,9 @@ function View() {
     window.addEventListener(
       "message",
       (event) => {
+        if (event.data.type === "console-log-clear" && event.origin) {
+          setLogs([]);
+        }
         if (event.data.type === "console-log" && event.origin) {
           const args = event.data.args.map((arg: any) =>
             typeof arg === "string" ? arg : JSON.stringify(arg)
