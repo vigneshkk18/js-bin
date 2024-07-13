@@ -17,6 +17,7 @@ export default defineConfig({
       bundler: "/src/bundler",
       transpiler: "/src/transpiler",
       fs: "/src/fs",
+      formatter: "/src/formatter",
       src: "/src",
     },
   },

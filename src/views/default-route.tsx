@@ -60,12 +60,11 @@ export default function DefaultRoute() {
   );
 }
 
-const Action = (createNewBin: () => Promise<void>) => () =>
-  (
-    <Button
-      onClick={createNewBin}
-      className="bg-secondary text-white w-full rounded-md"
-    >
-      Create New Bin
-    </Button>
-  );
+const Action = (createNewBin: () => Promise<void>) => () => (
+  <Button
+    onClick={createNewBin}
+    className="bg-secondary text-white w-full rounded-md"
+  >
+    Create New Bin
+  </Button>
+);

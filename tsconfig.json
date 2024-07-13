@@ -59,6 +59,9 @@
       "fs/*": [
         "src/fs/*"
       ],
+      "formatter/*": [
+        "src/formatter/*"
+      ],
     }
   },
   "include": [
