@@ -77,7 +77,7 @@ const NPMDialog = forwardRef(function (_props: any, ref: any) {
     setInstalledPkgList(updatedInstalledPkgList);
   };
 
-  const installPackages = async () => {
+  const installPackages = (onDialogClose: () => void) => async () => {
     if (!bin) return;
     try {
       showLoading();
@@ -98,6 +98,7 @@ const NPMDialog = forwardRef(function (_props: any, ref: any) {
           },
         },
       });
+      onDialogClose();
     } catch (error) {
       console.error(error);
     } finally {
@@ -147,11 +148,10 @@ const NPMDialog = forwardRef(function (_props: any, ref: any) {
   );
 });
 
-const Action = (installPackages: () => void) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return (_P: { onClose: () => void }) => (
+const Action = (installPackages: (onClose: () => void) => () => void) => {
+  return ({ onClose }: { onClose: () => void }) => (
     <Button
-      onClick={installPackages}
+      onClick={installPackages(onClose)}
       className="w-full bg-secondary text-white"
     >
       Update Packages

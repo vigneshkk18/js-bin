@@ -1,5 +1,11 @@
 import { createPortal } from "react-dom";
-import { ReactNode, forwardRef, useImperativeHandle, useRef } from "react";
+import {
+  ReactNode,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from "react";
 
 interface Dialog {
   title?: string;
@@ -15,30 +21,33 @@ const Dialog = forwardRef(
   ) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
+    const backdropClose = useCallback((ev: MouseEvent) => {
+      if (!dialogRef.current) return;
+      const dialogCoords = dialogRef.current.getBoundingClientRect();
+      if (
+        ev.clientX >= dialogCoords.x &&
+        ev.clientX <= dialogCoords.x + dialogCoords.width &&
+        ev.clientY >= dialogCoords.y &&
+        ev.clientY <= dialogCoords.y + dialogCoords.height
+      )
+        return;
+      closeDialog();
+      window.removeEventListener("click", backdropClose);
+    }, []);
+
     const openDialog = () => {
       if (!dialogRef.current) return;
       dialogRef.current.showModal();
 
-      const fn = (ev: MouseEvent) => {
-        if (!dialogRef.current) return;
-        const dialogCoords = dialogRef.current.getBoundingClientRect();
-        if (
-          ev.clientX >= dialogCoords.x &&
-          ev.clientX <= dialogCoords.x + dialogCoords.width &&
-          ev.clientY >= dialogCoords.y &&
-          ev.clientY <= dialogCoords.y + dialogCoords.height
-        )
-          return;
-        closeDialog();
-        window.removeEventListener("click", fn);
-      };
-      if (closable) setTimeout(() => window.addEventListener("click", fn), 0);
+      if (closable)
+        setTimeout(() => window.addEventListener("click", backdropClose), 0);
     };
 
-    const closeDialog = () => {
+    const closeDialog = useCallback(() => {
       if (!dialogRef.current) return;
       dialogRef.current.close();
-    };
+      window.removeEventListener("click", backdropClose);
+    }, []);
 
     useImperativeHandle(ref, () => ({
       openDialog,
@@ -51,7 +60,11 @@ const Dialog = forwardRef(
       >
         {title && <h1 className="text-2xl font-bold mb-3">{title}</h1>}
         {content}
-        <form className="w-full mt-3" method="dialog">
+        <form
+          className="w-full mt-3"
+          method="dialog"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <Action onClose={closable ? closeDialog : () => {}} />
         </form>
       </dialog>,
