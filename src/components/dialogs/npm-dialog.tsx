@@ -111,7 +111,7 @@ const NPMDialog = forwardRef(function (_props: any, ref: any) {
       ref={dialog}
       title="Add NPM Package"
       content={
-        <div className="w-full md:w-96">
+        <div className="md:w-96">
           <input
             value={search}
             onChange={updateSearch}
