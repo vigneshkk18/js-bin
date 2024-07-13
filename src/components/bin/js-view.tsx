@@ -27,6 +27,11 @@ function View() {
     updateCode("js", code);
   }
 
+  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (!e.shiftKey || !e.altKey || e.code !== "KeyF") return;
+    onCodeFormat();
+  }
+
   return (
     <>
       <JSHeader onCodeFormat={onCodeFormat} />
@@ -34,6 +39,7 @@ function View() {
         value={bin?.js ?? ""}
         theme={"none"}
         height="100%"
+        onKeyDown={onKeyDown}
         style={{ height: "100%" }}
         className="focus-visible:outline-none outline-none cursor-default"
         extensions={extension(bin?.extensionEnabled)}

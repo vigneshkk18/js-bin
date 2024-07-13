@@ -79,6 +79,7 @@ class Bundler {
     let out, error;
     if (script.code && styles.code) {
       out = constructHTML(head, body, importsMap, script.code, styles.code);
+      window.postMessage({ type: "console-log-clear" }, "*");
       error = null;
     } else {
       error = script.error ?? styles.error;
