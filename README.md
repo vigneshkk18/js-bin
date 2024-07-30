@@ -13,7 +13,7 @@
 1. Clone the repository:
    
    ```bash
-   git clone [https://github.com/your-username/jsbin-clone.git](https://github.com/your-username/jsbin-clone.git)
+   git clone https://github.com/vigneshkk18/js-bin.git
    ```
 2. Install dependencies:
 
