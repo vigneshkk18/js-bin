@@ -17,11 +17,11 @@
    ```
 2. Install dependencies:
 
-  ```bash
-  npm install
-  ```
+   ```bash
+   npm install
+   ```
 3. Run the server:
 
-  ```bash
-  npm run dev
-  ```
+   ```bash
+   npm run dev
+   ```
